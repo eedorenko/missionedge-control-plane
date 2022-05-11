@@ -1,0 +1,11 @@
+kind: ApplicationAssignment
+metadata:
+  name: >-
+    coral-applications-ApplicationRegistration-missionedge-appdev-sample-production-prod-airplane
+spec:
+  application:
+    kind: ApplicationRegistration
+    name: missionedge-appdev-sample
+    workspace: coral-applications
+    target: production
+  cluster: prod-airplane

@@ -1,10 +1,26 @@
 kind: ApplicationRegistration
 metadata:
   name: missionedge-appdev-sample
-spec: 
+spec:
   workspace: coral-applications
-  app: 
+  app:
     repo: https://github.com/eedorenko/missionedge-appdev-sample-src
     ref: main
     path: app.yaml
-    
+status:
+  lastUpdated: '2022-05-11T23:07:36.878Z'
+  deployments:
+    development:
+      clusters: 1
+      target:
+        name: development
+        selector:
+          environment: dev
+          type: airplane
+    production:
+      clusters: 1
+      target:
+        name: production
+        selector:
+          environment: prod
+          type: airplane
