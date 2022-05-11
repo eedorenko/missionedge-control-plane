@@ -1,0 +1,10 @@
+kind: ApplicationRegistration
+metadata:
+  name: missionedge-appdev-sample
+spec: 
+  workspace: coral-applications
+  app: 
+    repo: https://github.com/eedorenko/missionedge-appdev-sample-src
+    ref: main
+    path: app.yaml
+    
