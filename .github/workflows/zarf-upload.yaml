@@ -1,0 +1,82 @@
+name: Zarf Package and Upload
+########
+# Usage:
+# * Update env.GIT_OPS_REPO with the Cluster GitOps Repo name
+# * Update env.GIT_OPS_OWNER with the Owner for the Cluster GitOps Repo
+# * Update env.STORAGE_ACCOUNT_RESOURCE_GROUP with the Resource Group with existing Storage Account
+# * Update env.STORAGE_ACCOUNT_NAME with the Storage Account name
+# * Update env.CONTAINER_REGISTRY with the container registry url
+# * Create the following GitHub Actions secrets:
+#   * Name: GITOPS_PAT
+#   * Value: A Personal Access Token with the `repo` scope 
+#   * Name: CONTAINER_REGISTRY_USERNAME
+#   * Value: Username for Container registry
+#   * Name: CONTAINER_REGISTRY_SECRET
+#   * Value: Secret for Container registry
+#   * Name: AZURE_CREDENTIALS
+#   * Value: Service principal credentials that has scope for Resource Group containing the Storage Account
+#   * For AZURE_CREDENTIALS, see https://github.com/marketplace/actions/azure-login#configure-a-service-principal-with-a-secret
+########
+
+on:
+  workflow_dispatch:
+    inputs:
+      names:
+        description: 'Comma separated application or cluster names'
+        required: true
+        type: string
+      scope:
+        description: 'cluster or application'
+        required: true
+        type: string
+      app_workspace:
+        description: 'App Workspace. Required if scope is application'
+        required: false
+        type: string
+      app_env:
+        description: 'App Environment'
+        required: false
+        default: 'production'
+        type: string
+      version:
+        description: 'Zarf tarball Version'
+        required: false
+        type: string
+
+concurrency: upload
+
+env:
+  # TODO: Replace values below
+  GIT_OPS_OWNER: <Git ops repo owner>
+  GIT_OPS_REPO: <Git ops repo name>
+  STORAGE_ACCOUNT_RESOURCE_GROUP: <Replace with Azure Resource Group name with existing Storage Account>
+  STORAGE_ACCOUNT_NAME: <Replace with Azure storage account name>
+  CONTAINER_REGISTRY: <Replace with Container Registry url>
+  GITHUB_TOKEN: ${{ secrets.GITOPS_PAT }}
+  CONTAINER_REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
+  CONTAINER_REGISTRY_SECRET: ${{ secrets.CONTAINER_REGISTRY_SECRET }}
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Configure Git
+      run: |
+        git config --global user.name github-actions
+        git config --global user.email github-actions@github.com
+        git config --global credential.helper store
+        mkdir -p ~/.config/git
+        echo "https://git:${{ secrets.GITOPS_PAT }}@github.com/" > ~/.config/git/credentials
+
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Az Cli Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}  
+
+    - name: Package and Upload Zarf Tar
+      run: |
+        sudo ./utils/zarf-install.sh
+        export PATH="$PWD:${PATH}"        
+        ./utils/zarf-upload.sh --names "${{ github.event.inputs.names }}" --scope "${{ github.event.inputs.scope }}" --app-workspace "${{ github.event.inputs.app_workspace }}" --app-env "${{ github.event.inputs.app_env }}" --version "${{ github.event.inputs.version }}"

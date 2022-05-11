@@ -1,0 +1,8 @@
+kind: Target
+metadata:
+  name: production
+spec:
+  workspace: coral-applications
+  selector:
+    environment: prod
+    type: airplane
