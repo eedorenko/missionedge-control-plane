@@ -1,0 +1,10 @@
+kind: ApplicationAssignment
+metadata:
+  name: coral-system-ManifestDeployment-flux-iron-bank-all-prod-airplane
+spec:
+  application:
+    kind: ManifestDeployment
+    name: flux-iron-bank
+    workspace: coral-system
+    target: all
+  cluster: prod-airplane

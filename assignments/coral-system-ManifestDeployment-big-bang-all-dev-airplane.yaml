@@ -1,0 +1,10 @@
+kind: ApplicationAssignment
+metadata:
+  name: coral-system-ManifestDeployment-big-bang-all-dev-airplane
+spec:
+  application:
+    kind: ManifestDeployment
+    name: big-bang
+    workspace: coral-system
+    target: all
+  cluster: dev-airplane
