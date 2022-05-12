@@ -47,11 +47,11 @@ concurrency: upload
 
 env:
   # TODO: Replace values below
-  GIT_OPS_OWNER: <Git ops repo owner>
-  GIT_OPS_REPO: <Git ops repo name>
-  STORAGE_ACCOUNT_RESOURCE_GROUP: <Replace with Azure Resource Group name with existing Storage Account>
-  STORAGE_ACCOUNT_NAME: <Replace with Azure storage account name>
-  CONTAINER_REGISTRY: <Replace with Container Registry url>
+  GIT_OPS_OWNER: eeddorenko
+  GIT_OPS_REPO: missionedge-cluster-gitops
+  STORAGE_ACCOUNT_RESOURCE_GROUP: 21418-rg
+  STORAGE_ACCOUNT_NAME: 21418sa
+  CONTAINER_REGISTRY: registry1.dso.mil
   GITHUB_TOKEN: ${{ secrets.GITOPS_PAT }}
   CONTAINER_REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
   CONTAINER_REGISTRY_SECRET: ${{ secrets.CONTAINER_REGISTRY_SECRET }}
